@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 16:23:36
+ * @Last Modified time: 2018-12-21 16:26:38
  */
 
 #include <switch.h>
@@ -109,7 +109,10 @@ int generateToken(std::string akId, std::string akSecret, std::string* token,
   nlsTokenRequest.setKeySecret(akSecret);
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                     "generate new token func [%s] [%s] --- \n", akId.c_str(), akSecret.c_str());
-  if (-1 == nlsTokenRequest.applyNlsToken()) {
+  int code = nlsTokenRequest.applyNlsToken();
+  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
+                    "generate new token func code [%d]\n", code);
+  if (-1 == code) {
     switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                       "generate new token func failed  \n");
     return -1;
