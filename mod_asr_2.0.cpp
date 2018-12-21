@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 14:45:04
+ * @Last Modified time: 2018-12-21 14:49:33
  */
 
 #include <switch.h>
@@ -432,7 +432,7 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
         switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
                           SWITCH_LOG_WARNING, "argc length [%d]\n", argc);
         switch_core_session_get_read_impl(session, &read_impl);
-
+        
         if (!(pvt = (switch_da_t*)switch_core_session_alloc(
                   session, sizeof(switch_da_t)))) {
           switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
@@ -444,11 +444,19 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
                           SWITCH_LOG_WARNING, "receive param started!!\n");
         pvt->stop = 0;
         pvt->session = session;
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                          SWITCH_LOG_WARNING, "receive param 1!!\n");
         // APPKEY
-        string appkey = argv[0];
-        pvt->appKey = appkey.c_str();
+        const char* appkey = argv[0];
+        pvt->appKey = appkey;
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                          SWITCH_LOG_WARNING, "receive param 2!!\n");
         pvt->id = argv[1];
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                          SWITCH_LOG_WARNING, "receive param 3!!\n");
         pvt->seceret = argv[2];
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                          SWITCH_LOG_WARNING, "receive param 4!!\n");
         switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
                           SWITCH_LOG_WARNING,
                           "receive param finished!!\n");
