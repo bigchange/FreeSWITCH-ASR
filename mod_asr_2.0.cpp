@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 13:18:36
+ * @Last Modified time: 2018-12-21 13:23:55
  */
 
 #include <switch.h>
@@ -87,10 +87,10 @@ typedef struct {
   switch_media_bug_t* bug;
 
   SpeechRecognizerRequest* request;
-  char* appKey;
+  string appKey;
   char* id;
   char* seceret;
-  string* token;
+  string token;
   long g_expireTime = -1;
   int sampleRate;
   int stop;
@@ -431,7 +431,8 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
     pvt->stop = 0;
     pvt->session = session;
     // APPKEY
-    pvt->appKey = argv[0];
+    string appkey = argv[0];
+    pvt->appKey = appkey.c_str();
     pvt->id = argv[1];
     pvt->seceret = argv[2];
 
