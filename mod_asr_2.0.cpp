@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 17:30:03
+ * @Last Modified time: 2018-12-21 17:47:18
  */
 
 #include <switch.h>
@@ -560,20 +560,17 @@ SWITCH_MODULE_LOAD_FUNCTION(mod_asr_load) {
 
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG, " asr_load\n");
 
-  ParamCallBack cbParam;
-  cbParam.iExg = 1;
-  cbParam.sExg = "exg.";
   
-  callback->setOnRecognitionStarted(OnRecognitionStarted,
-                                    &cbParam);  // 设置start()成功回调函数
-  callback->setOnTaskFailed(OnRecognitionTaskFailed,
-                            &cbParam);  // 设置异常识别回调函数
-  callback->setOnChannelClosed(OnRecognitionChannelCloseed,
-                               &cbParam);  // 设置识别通道关闭回调函数
-  callback->setOnRecognitionResultChanged(OnRecognitionResultChanged,
-                                          &cbParam);  // 设置中间结果回调函数
-  callback->setOnRecognitionCompleted(OnRecognitionCompleted,
-                                      &cbParam);  // 设置识别结束回调函数
+  callback->setOnRecognitionStarted(OnRecognitionStarted
+                                );  // 设置start()成功回调函数
+  callback->setOnTaskFailed(OnRecognitionTaskFailed
+                            );  // 设置异常识别回调函数
+  callback->setOnChannelClosed(OnRecognitionChannelCloseed
+                              );  // 设置识别通道关闭回调函数
+  callback->setOnRecognitionResultChanged(OnRecognitionResultChanged
+                                          );  // 设置中间结果回调函数
+  callback->setOnRecognitionCompleted(OnRecognitionCompleted
+                                      );  // 设置识别结束回调函数
 
   return SWITCH_STATUS_SUCCESS;
 }
