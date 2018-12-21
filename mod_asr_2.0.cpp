@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 17:51:51
+ * @Last Modified time: 2018-12-21 18:02:50
  */
 
 #include <switch.h>
@@ -79,6 +79,8 @@ struct ParamCallBack {
   pthread_mutex_t mtx;
   bool bSend;
 };
+
+SpeechRecognizerCallback callback;
 
 typedef struct {
   switch_core_session_t* session;
@@ -326,7 +328,9 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
       pvt->callback = new SpeechRecognizerCallback();
 #else
       pvt->callback = new SpeechRecognizerCallback();
-      pvt->request = NlsClient::getInstance()->createRecognizerRequest(pvt->callback);
+      callback = *pvt->callback;
+      pvt->request =
+          NlsClient::getInstance()->createRecognizerRequest(pvt->callback);
       if (pvt->request == NULL) {
         cout << "createRecognizerRequest failed." << endl;
       }
@@ -389,8 +393,6 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           NlsClient::getInstance()->releaseRecognizerRequest(
               pvt->request);  // start()失败，释放request对象
 
-          delete callback;
-          callback = NULL;
           return SWITCH_FALSE;
 
         } else {
@@ -559,15 +561,15 @@ SWITCH_MODULE_LOAD_FUNCTION(mod_asr_load) {
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG, " asr_load\n");
 
   
-  callback->setOnRecognitionStarted(OnRecognitionStarted
+  callback.setOnRecognitionStarted(OnRecognitionStarted
                                 );  // 设置start()成功回调函数
-  callback->setOnTaskFailed(OnRecognitionTaskFailed
+  callback.setOnTaskFailed(OnRecognitionTaskFailed
                             );  // 设置异常识别回调函数
-  callback->setOnChannelClosed(OnRecognitionChannelCloseed
+  callback.etOnChannelClosed(OnRecognitionChannelCloseed
                               );  // 设置识别通道关闭回调函数
-  callback->setOnRecognitionResultChanged(OnRecognitionResultChanged
+  callback.setOnRecognitionResultChanged(OnRecognitionResultChanged
                                           );  // 设置中间结果回调函数
-  callback->setOnRecognitionCompleted(OnRecognitionCompleted
+  callback.setOnRecognitionCompleted(OnRecognitionCompleted
                                       );  // 设置识别结束回调函数
 
   return SWITCH_STATUS_SUCCESS;
