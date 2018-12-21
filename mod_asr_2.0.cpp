@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 15:59:56
+ * @Last Modified time: 2018-12-21 16:01:27
  */
 
 #include <switch.h>
@@ -108,7 +108,7 @@ int generateToken(string akId, string akSecret, string* token,
   nlsTokenRequest.setAccessKeyId(akId);
   nlsTokenRequest.setKeySecret(akSecret);
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
-                    "generate new token func [%s] [%s] --- \n" + akId, akId.c_str(), akSecret.c_str());
+                    "generate new token func [%s] [%s] --- \n", akId.c_str(), akSecret.c_str());
   if (-1 == nlsTokenRequest.applyNlsToken()) {
     cout << "Failed: " << nlsTokenRequest.getErrorMsg()
          << endl; /*获取失败原因*/
