@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 17:47:18
+ * @Last Modified time: 2018-12-21 17:51:51
  */
 
 #include <switch.h>
@@ -54,8 +54,6 @@ extern "C" {
 SWITCH_MODULE_DEFINITION(mod_asr, mod_asr_load, mod_asr_shutdown, NULL);
 };
 
-SpeechRecognizerCallback* callback;
-
 /**
  * 全局维护一个服务鉴权token和其对应的有效期时间戳，
  * 每次调用服务之前，首先判断token是否已经过期，
@@ -87,7 +85,7 @@ typedef struct {
   switch_media_bug_t* bug;
 
   SpeechRecognizerRequest* request;
-
+  SpeechRecognizerCallback* callback;
   char* appKey;
   char* id;
   char* seceret;
@@ -325,10 +323,10 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
 #ifdef _WIN32
       switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                         "ASR Start Not Support Win32\n");
-      callback = new SpeechRecognizerCallback();
+      pvt->callback = new SpeechRecognizerCallback();
 #else
-      callback = new SpeechRecognizerCallback();
-      pvt->request = NlsClient::getInstance()->createRecognizerRequest(callback);
+      pvt->callback = new SpeechRecognizerCallback();
+      pvt->request = NlsClient::getInstance()->createRecognizerRequest(pvt->callback);
       if (pvt->request == NULL) {
         cout << "createRecognizerRequest failed." << endl;
       }
