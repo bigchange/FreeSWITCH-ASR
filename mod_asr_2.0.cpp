@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 15:30:40
+ * @Last Modified time: 2018-12-21 15:31:32
  */
 
 #include <switch.h>
@@ -339,7 +339,7 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           }
         }
         pvt->request->setToken(
-            &pvt->token);  // 设置账号校验token, 必填参数
+            pvt->token.c_str());  // 设置账号校验token, 必填参数
 
         if (pvt->request->start() < 0) {
           switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
