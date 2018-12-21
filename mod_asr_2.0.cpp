@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 13:51:14
+ * @Last Modified time: 2018-12-21 13:52:08
  */
 
 #include <switch.h>
@@ -419,7 +419,7 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
   int argc;
   char* lbuf = NULL;
   argc = switch_separate_string(lbuf, ' ', argv,
-                                     (sizeof(argv) / sizeof(argv[0]))));
+                                     (sizeof(argv) / sizeof(argv[0])));
   switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
                       "argc length [%d]\n",argc);
   if (!zstr(data) && (lbuf = switch_core_session_strdup(session, data)) &&
