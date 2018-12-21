@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 15:04:10
+ * @Last Modified time: 2018-12-21 15:07:26
  */
 
 #include <switch.h>
@@ -312,7 +312,7 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
 
       if (pvt->request) {
         pvt->request->setAppKey(
-            pvt->appKey.c_str());  // 设置AppKey, 必填参数, 请参照官网申请
+            pvt->appKey);  // 设置AppKey, 必填参数, 请参照官网申请
         pvt->request->setFormat("pcm");  // 设置音频数据编码格式, 可选参数,
                                    // 目前支持pcm, opu, opus, speex. 默认是pcm
         pvt->request->setSampleRate(8000);  // 设置音频数据采样率, 可选参数, 目前支持16000,
@@ -334,7 +334,7 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           }
         }
         pvt->request->setToken(
-            pvt->token.c_str());  // 设置账号校验token, 必填参数
+            pvt->token);  // 设置账号校验token, 必填参数
 
         if (pvt->request->start() < 0) {
           switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
@@ -450,7 +450,7 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
         switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
                           SWITCH_LOG_WARNING, "receive param 1!!\n");
         // APPKEY
-        const char* appkey = argv[0];
+        char* appkey = argv[0];
         pvt->appKey = appkey;
         switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
                           SWITCH_LOG_WARNING, "receive param 2!!\n");
