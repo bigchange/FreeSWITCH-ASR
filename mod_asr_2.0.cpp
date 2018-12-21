@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 13:12:52
+ * @Last Modified time: 2018-12-21 13:14:11
  */
 
 #include <switch.h>
@@ -431,7 +431,7 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
     pvt->stop = 0;
     pvt->session = session;
     // APPKEY
-    pvt->appkey = argv[0]
+    pvt->appkey = argv[0];
     pvt->id = argv[1];
     pvt->seceret = argv[2];
 
