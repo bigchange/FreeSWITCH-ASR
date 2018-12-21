@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 16:33:46
+ * @Last Modified time: 2018-12-21 16:34:38
  */
 
 #include <switch.h>
@@ -355,9 +355,10 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           }
           const char*  token = nlsTokenRequest.getToken();
           pvt->token = token;
-          expireTime = nlsTokenRequest.getExpireTime();
+          g_expireTime = nlsTokenRequest.getExpireTime();
           switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
-                            "generate new token [%s] [%d] \n", token, expireTime);
+                            "generate new token [%s] [%d] \n", token,
+                            g_expireTime);
           /*if (-1 ==
               generateToken(idStr, seceretStr, &pvt->token, &g_expireTime)) {
             switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,"generate new token error \n");
