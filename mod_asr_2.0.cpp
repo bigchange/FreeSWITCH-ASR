@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 14:09:38
+ * @Last Modified time: 2018-12-21 14:14:57
  */
 
 #include <switch.h>
@@ -436,6 +436,9 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
 
         if (!(pvt = (switch_da_t*)switch_core_session_alloc(
                   session, sizeof(switch_da_t)))) {
+          switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                            SWITCH_LOG_WARNING,
+                            "switch_core_session_alloc failed!!\n");
           return;
         }
 
