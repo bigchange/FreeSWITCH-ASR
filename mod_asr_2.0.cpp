@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 16:34:38
+ * @Last Modified time: 2018-12-21 16:41:57
  */
 
 #include <switch.h>
@@ -359,10 +359,6 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                             "generate new token [%s] [%d] \n", token,
                             g_expireTime);
-          /*if (-1 ==
-              generateToken(idStr, seceretStr, &pvt->token, &g_expireTime)) {
-            switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,"generate new token error \n");
-          }*/
         }
         switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                           "g_expireTime [%d] \n", g_expireTime);
@@ -497,6 +493,22 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
         switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
                           SWITCH_LOG_WARNING,
                           "receive param finished!!\n");
+        NlsToken nlsTokenRequest;
+        std::string idStr(pvt->id);
+        std::string seceretStr(pvt->seceret);
+        nlsTokenRequest.setAccessKeyId(idStr);
+        nlsTokenRequest.setKeySecret(seceretStr);
+        int code = nlsTokenRequest.applyNlsToken();
+        switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
+                          "first generate new token func code [%d]\n", code);
+        if (-1 == code) {
+          switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
+                            " first generate new token func failed  \n");
+        }
+        const char* token = nlsTokenRequest.getToken();
+        pvt->token = token;
+        g_expireTime = nlsTokenRequest.getExpireTime();
+        
         if ((status = switch_core_media_bug_add(
                  session, "asr", NULL, asr_callback, pvt, 0,
                  SMBF_READ_REPLACE | SMBF_NO_PAUSE | SMBF_ONE_ONLY,
