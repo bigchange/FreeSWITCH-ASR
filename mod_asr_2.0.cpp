@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 16:19:04
+ * @Last Modified time: 2018-12-21 16:23:36
  */
 
 #include <switch.h>
@@ -102,7 +102,7 @@ typedef struct {
 /**
  * 根据AccessKey ID和AccessKey Secret重新生成一个token，并获取其有效期时间戳
  */
-int generateToken(string akId, string akSecret, string* token,
+int generateToken(std::string akId, std::string akSecret, std::string* token,
                   long* expireTime) {
   NlsToken nlsTokenRequest;
   nlsTokenRequest.setAccessKeyId(akId);
