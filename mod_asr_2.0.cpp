@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 14:49:33
+ * @Last Modified time: 2018-12-21 14:54:10
  */
 
 #include <switch.h>
@@ -87,6 +87,7 @@ typedef struct {
   switch_media_bug_t* bug;
 
   SpeechRecognizerRequest* request;
+  
   string appKey;
   char* id;
   char* seceret;
@@ -443,6 +444,8 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
         switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
                           SWITCH_LOG_WARNING, "receive param started!!\n");
         pvt->stop = 0;
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                          SWITCH_LOG_WARNING, "receive param 0!!\n");
         pvt->session = session;
         switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
                           SWITCH_LOG_WARNING, "receive param 1!!\n");
