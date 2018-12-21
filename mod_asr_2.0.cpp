@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 17:20:01
+ * @Last Modified time: 2018-12-21 17:30:03
  */
 
 #include <switch.h>
@@ -325,13 +325,12 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
 #ifdef _WIN32
       switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                         "ASR Start Not Support Win32\n");
+      callback = new SpeechRecognizerCallback();
 #else
       callback = new SpeechRecognizerCallback();
       pvt->request = NlsClient::getInstance()->createRecognizerRequest(callback);
       if (pvt->request == NULL) {
         cout << "createRecognizerRequest failed." << endl;
-        delete callback;
-        callback = NULL;
       }
 #endif
 
@@ -411,8 +410,6 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
 
         pvt->request->stop();
         NlsClient::getInstance()->releaseRecognizerRequest(pvt->request);
-        delete callback;
-        callback = NULL;
       }
     } break;
 
