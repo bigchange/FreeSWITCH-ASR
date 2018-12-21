@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 11:52:31
+ * @Last Modified time: 2018-12-21 11:56:40
  */
 
 #include <switch.h>
@@ -289,7 +289,7 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
                         "ASR Start Not Support Win32\n");
 #else
       pvt->request = NlsClient::getInstance()->createRecognizerRequest(callback);
-      if (request == NULL) {
+      if (pvt->request == NULL) {
         cout << "createRecognizerRequest failed." << endl;
         delete callback;
         callback = NULL;
@@ -297,18 +297,18 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
 #endif
 
       if (pvt->request) {
-        request->setAppKey(
+        pvt->request->setAppKey(
             pvt->appkey.c_str());  // 设置AppKey, 必填参数, 请参照官网申请
         // request->setFormat("wav");  // 设置音频数据编码格式, 可选参数,
                                    // 目前支持pcm, opu, opus, speex. 默认是pcm
-        request->setSampleRate(
+        pvt->request->setSampleRate(
             pvt->sampleRate);  // 设置音频数据采样率, 可选参数, 目前支持16000,
-                             // 8000. 默认是16000
-        request->setIntermediateResult(
+                               // 8000. 默认是16000
+        pvt->request->setIntermediateResult(
             false);  // 设置是否返回中间识别结果, 可选参数. 默认false
-        request->setPunctuationPrediction(
+        pvt->request->setPunctuationPrediction(
             false);  // 设置是否在后处理中添加标点, 可选参数. 默认false
-        request->setInverseTextNormalization(
+        pvt->request->setInverseTextNormalization(
             false);  // 设置是否在后处理中执行ITN, 可选参数. 默认false
         std::time_t curTime = std::time(0);
         if (g_expireTime - curTime < 10) {
@@ -322,7 +322,7 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
         }
         request->setToken(tst->token.c_str());  // 设置账号校验token, 必填参数
 
-        if (pvt->request->Start() < 0) {
+        if (pvt->request->start() < 0) {
           switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                             "ASR Start Failed channel:%s\n",
                             switch_channel_get_name(channel));
@@ -367,7 +367,7 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
         }
 
         if (pvt->request) {
-          if (pvt->request->SendAudio(frame_data, frame_len, false) <= 0) {
+          if (pvt->request->sendAudio(frame_data, frame_len, false) <= 0) {
             return SWITCH_FALSE;
           }
         }
@@ -419,7 +419,7 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
     pvt->session = session;
     // APPKEY
     pvt->appkey = argv[0]
-    pvt-> id = argv[1];
+    pvt->id = argv[1];
     pvt->seceret = argv[2];
 
     if ((status = switch_core_media_bug_add(
@@ -455,7 +455,7 @@ SWITCH_MODULE_LOAD_FUNCTION(mod_asr_load) {
   ParamCallBack cbParam;
   cbParam.iExg = 1;
   cbParam.sExg = "exg.";
-  
+
   callback = new SpeechRecognizerCallback();
   
   callback->setOnRecognitionStarted(OnRecognitionStarted,
