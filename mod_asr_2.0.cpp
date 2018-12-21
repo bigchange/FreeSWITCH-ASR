@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 18:03:33
+ * @Last Modified time: 2018-12-21 18:07:53
  */
 
 #include <switch.h>
@@ -27,11 +27,10 @@
 
 #include "nlsCommonSdk/Token.h"
 
-#define FRAME_SIZE 3200
-#define SAMPLE_RATE 16000
+#define FRAME_SIZE 600
+#define SAMPLE_RATE 8000
 
-using std::cout;
-using std::endl;
+
 using std::ifstream;
 using std::ios;
 using std::map;
@@ -169,20 +168,6 @@ void OnRecognitionStarted(NlsEvent* cbEvent, void* cbParam) {
   switch_event_t* event = NULL;
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                     "OnRecognitionStarted\n");
-  ParamCallBack* tmpParam = (ParamCallBack*)cbParam;
-  cout << "CbParam: " << tmpParam->iExg << " " << tmpParam->sExg
-       << endl;  // 仅表示自定义参数示例
-
-  cout
-      << "OnRecognitionStarted: "
-      << "status code: "
-      << cbEvent
-             ->getStausCode()  // 获取消息的状态码，成功为0或者20000000，失败时对应失败的错误码
-      << ", task id: "
-      << cbEvent->getTaskId()  // 当前任务的task id，方便定位问题，建议输出
-      << endl;
-  // cout << "OnRecognitionStarted: All response:" << cbEvent->getAllResponse()
-  // << endl; // 获取服务端返回的全部信息
   if (switch_event_create(&event, SWITCH_EVENT_CUSTOM) ==
       SWITCH_STATUS_SUCCESS) {
     event->subclass_name = strdup("asr");
@@ -208,21 +193,6 @@ void OnRecognitionStarted(NlsEvent* cbEvent, void* cbParam) {
 void OnRecognitionResultChanged(NlsEvent* cbEvent, void* cbParam) {
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                     "OnRecognitionResultChanged\n");
-  ParamCallBack* tmpParam = (ParamCallBack*)cbParam;
-  cout << "CbParam: " << tmpParam->iExg << " " << tmpParam->sExg
-       << endl;  // 仅表示自定义参数示例
-
-  cout
-      << "OnRecognitionResultChanged: "
-      << "status code: "
-      << cbEvent
-             ->getStausCode()  // 获取消息的状态码，成功为0或者20000000，失败时对应失败的错误码
-      << ", task id: "
-      << cbEvent->getTaskId()  // 当前任务的task id，方便定位问题，建议输出
-      << ", result: " << cbEvent->getResult()  // 获取中间识别结果
-      << endl;
-  // cout << "OnRecognitionResultChanged: All response:" <<
-  // cbEvent->getAllResponse() << endl; // 获取服务端返回的全部信息
 }
 /**
  * @brief sdk在接收到云端返回识别结束消息时, sdk内部线程上报Completed事件
@@ -237,19 +207,6 @@ void OnRecognitionCompleted(NlsEvent* cbEvent, void* cbParam) {
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                     "OnRecognitionCompleted\n");
   switch_event_t* event = NULL;
-  ParamCallBack* tmpParam = (ParamCallBack*)cbParam;
-  cout << "CbParam: " << tmpParam->iExg << " " << tmpParam->sExg
-       << endl;  // 仅表示自定义参数示例
-
-  cout
-      << "OnRecognitionCompleted: "
-      << "status code: "
-      << cbEvent
-             ->getStausCode()  // 获取消息的状态码，成功为0或者20000000，失败时对应失败的错误码
-      << ", task id: "
-      << cbEvent->getTaskId()  // 当前任务的task id，方便定位问题，建议输出
-      << ", result: " << cbEvent->getResult()  // 获取中间识别结果
-      << endl;
   // switch_event_t* event = NULL;
   if (switch_event_create(&event, SWITCH_EVENT_CUSTOM) ==
       SWITCH_STATUS_SUCCESS) {
@@ -262,8 +219,7 @@ void OnRecognitionCompleted(NlsEvent* cbEvent, void* cbParam) {
                                    cbEvent->getTaskId());
     switch_event_fire(&event);
   }
-  // cout << "OnRecognitionCompleted: All response:" <<
-  // cbEvent->getAllResponse() << endl; // 获取服务端返回的全部信息
+  
 }
 /**
  * @brief 识别过程(包含start(), send(), stop())发生异常时,
@@ -276,25 +232,8 @@ void OnRecognitionCompleted(NlsEvent* cbEvent, void* cbParam) {
  * @return
  */
 void OnRecognitionTaskFailed(NlsEvent* cbEvent, void* cbParam) {
-  ParamCallBack* tmpParam = (ParamCallBack*)cbParam;
-  cout << "CbParam: " << tmpParam->iExg << " " << tmpParam->sExg
-       << endl;  // 仅表示自定义参数示例
+  
 
-  cout
-      << "OnRecognitionTaskFailed: "
-      << "status code: "
-      << cbEvent
-             ->getStausCode()  // 获取消息的状态码，成功为0或者20000000，失败时对应失败的错误码
-      << ", task id: "
-      << cbEvent->getTaskId()  // 当前任务的task id，方便定位问题，建议输出
-      << ", error message: " << cbEvent->getErrorMessage() << endl;
-  // cout << "OnRecognitionTaskFailed: All response:" <<
-  // cbEvent->getAllResponse() << endl; // 获取服务端返回的全部信息
-
-  /*设置发送状态位, 停止数据发送. */
-  pthread_mutex_lock(&(tmpParam->mtx));
-  tmpParam->bSend = false;
-  pthread_mutex_unlock(&(tmpParam->mtx));
 }
 
 /**
@@ -307,12 +246,6 @@ void OnRecognitionTaskFailed(NlsEvent* cbEvent, void* cbParam) {
  * @return
  */
 void OnRecognitionChannelCloseed(NlsEvent* cbEvent, void* cbParam) {
-  ParamCallBack* tmpParam = (ParamCallBack*)cbParam;
-  cout << "CbParam: " << tmpParam->iExg << " " << tmpParam->sExg
-       << endl;  // 仅表示自定义参数示例
-
-  cout << "OnRecognitionChannelCloseed: All response:"
-       << cbEvent->getAllResponse() << endl;  // 获取服务端返回的全部信息
 }
 
 static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
@@ -332,14 +265,15 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
       pvt->request =
           NlsClient::getInstance()->createRecognizerRequest(pvt->callback);
       if (pvt->request == NULL) {
-        cout << "createRecognizerRequest failed." << endl;
+        switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
+                          "createRecognizerRequest failed.\n");
       }
 #endif
 
       if (pvt->request) {
         pvt->request->setAppKey(
             pvt->appKey);  // 设置AppKey, 必填参数, 请参照官网申请
-        pvt->request->setFormat("wav");  // 设置音频数据编码格式, 可选参数,
+        pvt->request->setFormat("pcm");  // 设置音频数据编码格式, 可选参数,
                                    // 目前支持pcm, opu, opus, speex. 默认是pcm
         pvt->request->setSampleRate(8000);  // 设置音频数据采样率, 可选参数, 目前支持16000,
                                // 8000. 默认是16000
