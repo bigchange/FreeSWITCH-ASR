@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 15:21:25
+ * @Last Modified time: 2018-12-21 15:29:15
  */
 
 #include <switch.h>
@@ -91,7 +91,8 @@ typedef struct {
   char *appKey;
   char* id;
   char* seceret;
-  char* token = "";
+  // char* token = NULL;
+  std::string token;
   long g_expireTime = -1;
   int sampleRate;
   int stop;
@@ -329,10 +330,11 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           switch_log_printf(
               SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
               "the token will be expired, please generate new token\n");
-          string tokenStr(pvt->token);
+          
+          // string tokenStr(pvt->token);
           switch_log_printf(
               SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,"generating new token\n");
-          if (-1 == generateToken(pvt->id, pvt->seceret, &(tokenStr), &g_expireTime)) {
+          if (-1 == generateToken(pvt->id, pvt->seceret, &pvt->token, &g_expireTime)) {
             switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,"generate new token error \n");
           }
         }
