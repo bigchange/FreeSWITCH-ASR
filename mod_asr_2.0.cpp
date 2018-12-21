@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 14:54:10
+ * @Last Modified time: 2018-12-21 15:04:10
  */
 
 #include <switch.h>
@@ -88,10 +88,10 @@ typedef struct {
 
   SpeechRecognizerRequest* request;
   
-  string appKey;
+  char *appKey;
   char* id;
   char* seceret;
-  string token;
+  char* token;
   long g_expireTime = -1;
   int sampleRate;
   int stop;
