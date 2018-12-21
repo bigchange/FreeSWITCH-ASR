@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 15:37:32
+ * @Last Modified time: 2018-12-21 15:43:31
  */
 
 #include <switch.h>
@@ -88,9 +88,9 @@ typedef struct {
 
   SpeechRecognizerRequest* request;
 
-  std::string appKey;
-  std::string id;
-  std::string seceret;
+  char* appKey;
+  char* id;
+  char* seceret;
   // char* token = NULL;
   std::string token;
   long g_expireTime = -1;
@@ -316,7 +316,7 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
 
       if (pvt->request) {
         pvt->request->setAppKey(
-            pvt->appKey.c_str());  // 设置AppKey, 必填参数, 请参照官网申请
+            pvt->appKey);  // 设置AppKey, 必填参数, 请参照官网申请
         pvt->request->setFormat("pcm");  // 设置音频数据编码格式, 可选参数,
                                    // 目前支持pcm, opu, opus, speex. 默认是pcm
         pvt->request->setSampleRate(8000);  // 设置音频数据采样率, 可选参数, 目前支持16000,
@@ -336,7 +336,10 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           // string tokenStr(pvt->token);
           switch_log_printf(
               SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,"generating new token\n");
-          if (-1 == generateToken(pvt->id, pvt->seceret, &pvt->token, &g_expireTime)) {
+          std::string idStr(pvt->id);
+          std::string seceretStr(pvt->seceret);
+          if (-1 ==
+              generateToken(idStr, seceretStr, &pvt->token, &g_expireTime)) {
             switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,"generate new token error \n");
           }
         }
