@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 11:56:40
+ * @Last Modified time: 2018-12-21 13:08:33
  */
 
 #include <switch.h>
@@ -211,6 +211,7 @@ void OnRecognitionResultChanged(NlsEvent* cbEvent, void* cbParam) {
  * @return
  */
 void OnRecognitionCompleted(NlsEvent* cbEvent, void* cbParam) {
+  switch_event_t* event = NULL;
   ParamCallBack* tmpParam = (ParamCallBack*)cbParam;
   cout << "CbParam: " << tmpParam->iExg << " " << tmpParam->sExg
        << endl;  // 仅表示自定义参数示例
@@ -224,6 +225,18 @@ void OnRecognitionCompleted(NlsEvent* cbEvent, void* cbParam) {
       << cbEvent->getTaskId()  // 当前任务的task id，方便定位问题，建议输出
       << ", result: " << cbEvent->getResult()  // 获取中间识别结果
       << endl;
+  
+  if (switch_event_create(&event, SWITCH_EVENT_CUSTOM) ==
+      SWITCH_STATUS_SUCCESS) {
+    event->subclass_name = strdup("asr_res_result");
+    switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Event-Subclass",
+                                   event->subclass_name);
+    switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "ASR-Response",
+                                   cbEvent->getResult().c_str());
+    switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Channel",
+                                   cbEvent->getTaskId().c_str());
+    switch_event_fire(&event);
+  }
   // cout << "OnRecognitionCompleted: All response:" <<
   // cbEvent->getAllResponse() << endl; // 获取服务端返回的全部信息
 }
