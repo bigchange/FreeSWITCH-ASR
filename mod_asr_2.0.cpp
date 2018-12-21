@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 13:39:36
+ * @Last Modified time: 2018-12-21 13:45:09
  */
 
 #include <switch.h>
@@ -415,7 +415,7 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
   switch_codec_implementation_t read_impl;
   memset(&read_impl, 0, sizeof(switch_codec_implementation_t));
 
-  char* argv[2] = {0};
+  char* argv[3] = {0};
   int argc;
   char* lbuf = NULL;
 
