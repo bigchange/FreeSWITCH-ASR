@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 18:02:50
+ * @Last Modified time: 2018-12-21 18:03:33
  */
 
 #include <switch.h>
@@ -565,7 +565,7 @@ SWITCH_MODULE_LOAD_FUNCTION(mod_asr_load) {
                                 );  // 设置start()成功回调函数
   callback.setOnTaskFailed(OnRecognitionTaskFailed
                             );  // 设置异常识别回调函数
-  callback.etOnChannelClosed(OnRecognitionChannelCloseed
+  callback.setOnChannelClosed(OnRecognitionChannelCloseed
                               );  // 设置识别通道关闭回调函数
   callback.setOnRecognitionResultChanged(OnRecognitionResultChanged
                                           );  // 设置中间结果回调函数
