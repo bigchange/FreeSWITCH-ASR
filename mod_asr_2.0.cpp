@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 14:03:50
+ * @Last Modified time: 2018-12-21 14:09:38
  */
 
 #include <switch.h>
@@ -451,6 +451,9 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
                  session, "asr", NULL, asr_callback, pvt, 0,
                  SMBF_READ_REPLACE | SMBF_NO_PAUSE | SMBF_ONE_ONLY,
                  &(pvt->bug))) != SWITCH_STATUS_SUCCESS) {
+          switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                            SWITCH_LOG_DEBUG, "%s Start ASR Failed!\n",
+                            switch_channel_get_name(channel));
           return;
         }
 
