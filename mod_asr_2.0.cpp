@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 14:27:22
+ * @Last Modified time: 2018-12-21 14:39:19
  */
 
 #include <switch.h>
@@ -324,12 +324,13 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
             false);  // 设置是否在后处理中执行ITN, 可选参数. 默认false
         std::time_t curTime = std::time(0);
         if (g_expireTime - curTime < 10) {
-          cout << "the token will be expired, please generate new token by "
-                  "AccessKey-ID and AccessKey-Secret."
-               << endl;
+          switch_log_printf(
+              SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
+              "the token will be expired, please generate new token\n");
           if (-1 == generateToken(pvt->id, pvt->seceret, &pvt->token, &g_expireTime)) {
-            cout << "generate new token error " 
-                 << endl;
+            switch_log_printf(
+                SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
+                "generate new token error \n");
           }
         }
         pvt->request->setToken(
@@ -448,7 +449,9 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
         pvt->appKey = appkey.c_str();
         pvt->id = argv[1];
         pvt->seceret = argv[2];
-
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                          SWITCH_LOG_WARNING,
+                          "receive param finished!!\n");
         if ((status = switch_core_media_bug_add(
                  session, "asr", NULL, asr_callback, pvt, 0,
                  SMBF_READ_REPLACE | SMBF_NO_PAUSE | SMBF_ONE_ONLY,
