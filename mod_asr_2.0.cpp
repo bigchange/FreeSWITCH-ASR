@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 14:39:19
+ * @Last Modified time: 2018-12-21 14:41:03
  */
 
 #include <switch.h>
@@ -325,12 +325,11 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
         std::time_t curTime = std::time(0);
         if (g_expireTime - curTime < 10) {
           switch_log_printf(
-              SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
+              SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
               "the token will be expired, please generate new token\n");
           if (-1 == generateToken(pvt->id, pvt->seceret, &pvt->token, &g_expireTime)) {
-            switch_log_printf(
-                SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
-                "generate new token error \n");
+            switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
+                              "generate new token error \n");
           }
         }
         pvt->request->setToken(
