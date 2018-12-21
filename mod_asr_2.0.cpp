@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 14:41:03
+ * @Last Modified time: 2018-12-21 14:45:04
  */
 
 #include <switch.h>
@@ -440,7 +440,8 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
                             "switch_core_session_alloc failed!!\n");
           return;
         }
-
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                          SWITCH_LOG_WARNING, "receive param started!!\n");
         pvt->stop = 0;
         pvt->session = session;
         // APPKEY
