@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 13:52:08
+ * @Last Modified time: 2018-12-21 14:03:50
  */
 
 #include <switch.h>
@@ -418,41 +418,50 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
   char* argv[3] = {0};
   int argc;
   char* lbuf = NULL;
-  argc = switch_separate_string(lbuf, ' ', argv,
-                                     (sizeof(argv) / sizeof(argv[0])));
-  switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
-                      "argc length [%d]\n",argc);
-  if (!zstr(data) && (lbuf = switch_core_session_strdup(session, data)) &&
-      (argc = switch_separate_string(lbuf, ' ', argv,
-                                     (sizeof(argv) / sizeof(argv[0])))) >= 3) {
-    switch_core_session_get_read_impl(session, &read_impl);
 
-    if (!(pvt = (switch_da_t*)switch_core_session_alloc(session,
-                                                        sizeof(switch_da_t)))) {
-      return;
+  if (!zstr(data)) {
+    switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
+                     "has data\n");
+    if (lbuf = switch_core_session_strdup(session, data)) {
+      switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
+                        "has buff\n");
+
+      argc = switch_separate_string(lbuf, ' ', argv,
+                                    (sizeof(argv) / sizeof(argv[0])));
+
+      if (argc >= 3) {
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session),
+                          SWITCH_LOG_WARNING, "argc length [%d]\n", argc);
+        switch_core_session_get_read_impl(session, &read_impl);
+
+        if (!(pvt = (switch_da_t*)switch_core_session_alloc(
+                  session, sizeof(switch_da_t)))) {
+          return;
+        }
+
+        pvt->stop = 0;
+        pvt->session = session;
+        // APPKEY
+        string appkey = argv[0];
+        pvt->appKey = appkey.c_str();
+        pvt->id = argv[1];
+        pvt->seceret = argv[2];
+
+        if ((status = switch_core_media_bug_add(
+                 session, "asr", NULL, asr_callback, pvt, 0,
+                 SMBF_READ_REPLACE | SMBF_NO_PAUSE | SMBF_ONE_ONLY,
+                 &(pvt->bug))) != SWITCH_STATUS_SUCCESS) {
+          return;
+        }
+
+        switch_channel_set_private(channel, "asr", pvt);
+        switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_DEBUG,
+                          "%s Start ASR\n", switch_channel_get_name(channel));
+      }      
     }
-
-    pvt->stop = 0;
-    pvt->session = session;
-    // APPKEY
-    string appkey = argv[0];
-    pvt->appKey = appkey.c_str();
-    pvt->id = argv[1];
-    pvt->seceret = argv[2];
-
-    if ((status = switch_core_media_bug_add(
-             session, "asr", NULL, asr_callback, pvt, 0,
-             SMBF_READ_REPLACE | SMBF_NO_PAUSE | SMBF_ONE_ONLY, &(pvt->bug))) !=
-        SWITCH_STATUS_SUCCESS) {
-      return;
-    }
-
-    switch_channel_set_private(channel, "asr", pvt);
-    switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_DEBUG,
-                      "%s Start ASR\n", switch_channel_get_name(channel));
   } else {
     switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_WARNING,
-                      "%s id or secret can not be empty\n",
+                      "%s appkey, id or secret can not be empty\n",
                       switch_channel_get_name(channel));
   }
 }
