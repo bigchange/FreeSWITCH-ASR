@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 13:23:55
+ * @Last Modified time: 2018-12-21 13:27:24
  */
 
 #include <switch.h>
@@ -328,12 +328,13 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           cout << "the token will be expired, please generate new token by "
                   "AccessKey-ID and AccessKey-Secret."
                << endl;
-          if (-1 == generateToken(pvt->id, pvt->seceret, pvt->token, &g_expireTime)) {
+          if (-1 == generateToken(pvt->id, pvt->seceret, &pvt->token, &g_expireTime)) {
             cout << "generate new token error " 
                  << endl;
           }
         }
-        pvt->request->setToken(pvt->token);  // 设置账号校验token, 必填参数
+        pvt->request->setToken(
+            pvt->token.c_str());  // 设置账号校验token, 必填参数
 
         if (pvt->request->start() < 0) {
           switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
