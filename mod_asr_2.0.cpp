@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 13:14:11
+ * @Last Modified time: 2018-12-21 13:18:36
  */
 
 #include <switch.h>
@@ -87,7 +87,7 @@ typedef struct {
   switch_media_bug_t* bug;
 
   SpeechRecognizerRequest* request;
-  char* appkey;
+  char* appKey;
   char* id;
   char* seceret;
   string* token;
@@ -333,7 +333,7 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
                  << endl;
           }
         }
-        request->setToken(pvt->token.c_str());  // 设置账号校验token, 必填参数
+        pvt->request->setToken(pvt->token);  // 设置账号校验token, 必填参数
 
         if (pvt->request->start() < 0) {
           switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
@@ -431,7 +431,7 @@ SWITCH_STANDARD_APP(start_asr_session_function) {
     pvt->stop = 0;
     pvt->session = session;
     // APPKEY
-    pvt->appkey = argv[0];
+    pvt->appKey = argv[0];
     pvt->id = argv[1];
     pvt->seceret = argv[2];
 
