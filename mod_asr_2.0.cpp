@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 17:10:11
+ * @Last Modified time: 2018-12-21 17:11:59
  */
 
 #include <switch.h>
@@ -182,6 +182,18 @@ void OnRecognitionStarted(NlsEvent* cbEvent, void* cbParam) {
       << endl;
   // cout << "OnRecognitionStarted: All response:" << cbEvent->getAllResponse()
   // << endl; // 获取服务端返回的全部信息
+  // switch_event_t* event = NULL;
+  if (switch_event_create(&event, SWITCH_EVENT_CUSTOM) ==
+      SWITCH_STATUS_SUCCESS) {
+    event->subclass_name = strdup("asr");
+    switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Event-Subclass",
+                                   event->subclass_name);
+    switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "ASR-Response",
+                                   "OnRecognitionStarted");
+    switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Channel",
+                                   cbEvent->getTaskId());
+    switch_event_fire(&event);
+  }
 }
 
 /**
