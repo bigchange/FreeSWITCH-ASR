@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 15:58:21
+ * @Last Modified time: 2018-12-21 15:59:56
  */
 
 #include <switch.h>
@@ -116,12 +116,12 @@ int generateToken(string akId, string akSecret, string* token,
                       "generate new token func failed  \n");
     return -1;
   }
-
+  switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
+                    "generate new token value start  \n");
   *token = nlsTokenRequest.getToken();
   *expireTime = nlsTokenRequest.getExpireTime();
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
-                    "generate new token func [%s] [%d] \n", *token,
-                    *expireTime);
+                    "generate new token value finished \n");
   return 0;
 }
 
