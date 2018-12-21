@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 15:43:31
+ * @Last Modified time: 2018-12-21 15:45:21
  */
 
 #include <switch.h>
@@ -336,8 +336,8 @@ static switch_bool_t asr_callback(switch_media_bug_t* bug, void* user_data,
           // string tokenStr(pvt->token);
           switch_log_printf(
               SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,"generating new token\n");
-          std::string idStr(pvt->id);
-          std::string seceretStr(pvt->seceret);
+          std::string idStr(*pvt->id);
+          std::string seceretStr(*pvt->seceret);
           if (-1 ==
               generateToken(idStr, seceretStr, &pvt->token, &g_expireTime)) {
             switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,"generate new token error \n");
