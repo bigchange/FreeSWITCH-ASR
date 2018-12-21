@@ -2,7 +2,7 @@
  * @Author: Jerry You 
  * @CreatedDate: 2018-12-21 10:20:54 
  * @Last Modified by: Jerry You
- * @Last Modified time: 2018-12-21 17:11:59
+ * @Last Modified time: 2018-12-21 17:12:50
  */
 
 #include <switch.h>
@@ -166,6 +166,7 @@ unsigned int getSendAudioSleepTime(const int dataSize, const int sampleRate,
  * @return
  */
 void OnRecognitionStarted(NlsEvent* cbEvent, void* cbParam) {
+  switch_event_t* event = NULL;
   switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_WARNING,
                     "OnRecognitionStarted\n");
   ParamCallBack* tmpParam = (ParamCallBack*)cbParam;
@@ -182,7 +183,6 @@ void OnRecognitionStarted(NlsEvent* cbEvent, void* cbParam) {
       << endl;
   // cout << "OnRecognitionStarted: All response:" << cbEvent->getAllResponse()
   // << endl; // 获取服务端返回的全部信息
-  // switch_event_t* event = NULL;
   if (switch_event_create(&event, SWITCH_EVENT_CUSTOM) ==
       SWITCH_STATUS_SUCCESS) {
     event->subclass_name = strdup("asr");
